@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .error { color: red; }
+</style>
+
+<h2>User Sign-Up</h2>
+<form action="/signup" method='POST'>
+<label> 
+    <input type="text" name="username" id="username" placeholder="Enter Username" required/>
+    </label>
+    <p class="error"></p>
+<label>
+    <input type="password" name="password" id="password" placeholder="Enter Password" required/>
+    </label>
+    <p class="error"></p>
+<label>
+    <input type="password" name="verify-password" id="verify-password" placeholder="Re-Enter Password" required/>
+    </label>
+    <p class="error"></p>
+<label>
+    <input type="text" name="email" id="email" placeholder="Email (optional)"/>
+    </label>
+    <p class="error"></p>
+<label>
+    <input type="submit" name="Submit" value="Sign Up"/> 
+</label>
+</form>    
+
+
+{% endblock %}
