@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.config['DEBUG'] = True 
 
 
-@app.route("/", methods=['GET'])
+@app.route("/")
 def index():
 
     username_error = ''
@@ -36,16 +36,13 @@ def form_validate():
     for character in username:
         if character ==" ":
             username_error = 'Username cannot have spaces'
-            UserNameInput = ''
             return render_template('edit.html', username_error=username_error)
 
     if username == '':
         username_error = 'Username cannot be blank'
-        UserNameInput = ''
         
     if len(username) > 20 or len(username) < 3:
         username_error = 'Not a valid username'
-        UserNameInput = ''
         return render_template('edit.html', username_error=username_error)
 
 # ------ password validation ------
@@ -84,6 +81,11 @@ def form_validate():
         verify_password_error = 'Passwords do not match'
         return render_template('edit.html', verify_password_error=verify_password_error)
 
+# Success without email
+
+    welcome_message = '<h1>Welcome, ' + username + '</h1>'
+    return welcome_message
+
 # ------ email validation ------ 
 
 # Email is optional.
@@ -112,10 +114,9 @@ def form_validate():
     if len(email) > 20 or len(email) < 3:
         password_error = 'Not a valid email'
         return render_template('edit.html', email_error=email_error)
-        
-# ------ success ------
 
-    else:
+# Success with email
+
         welcome_message = '<h1>Welcome, ' + username + '</h1>'
         return welcome_message
     
