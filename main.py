@@ -6,9 +6,16 @@ app = Flask(__name__)
 app.config['DEBUG'] = True 
 
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 def index():
-    return render_template('edit.html')
+
+    username_error = ''
+    password_error = ''
+    verify_password_error = ''
+    email_error = ''
+
+    return render_template('edit.html', username_error=username_error, password_error=password_error,
+        verify_password_error=verify_password_error, email_error=email_error)
 
 @app.route("/signup", methods=['POST'])
 def form_validate():
@@ -17,11 +24,6 @@ def form_validate():
     username_escape = cgi.escape(username, quote=True)
 
 # ------ Validation Section ------
-
-# Redirects used to test functions. 
-# Look for specific error message in URL when testing.
-
-# Unable to get errors to return on re-rendered form page with feedback. 
 
 # ------ username validation ------
 
@@ -34,14 +36,17 @@ def form_validate():
     for character in username:
         if character ==" ":
             username_error = 'Username cannot have spaces'
-            return redirect("/?error=" + username_error)
+            UserNameInput = ''
+            return render_template('edit.html', username_error=username_error)
 
     if username == '':
         username_error = 'Username cannot be blank'
+        UserNameInput = ''
         
     if len(username) > 20 or len(username) < 3:
         username_error = 'Not a valid username'
-        return redirect("/?error=" + username_error)
+        UserNameInput = ''
+        return render_template('edit.html', username_error=username_error)
 
 # ------ password validation ------
 
@@ -61,15 +66,15 @@ def form_validate():
     for character in password:
         if character == " ":
             password_error = "Password cannot have spaces"
-            return redirect("/?error=" + password_error)
+            return render_template('edit.html', password_error=password_error, username=username)
 
     if password == '':
         password_error = "Password cannot be blank"
-        return redirect("/?error=" + password_error)
+        return render_template('edit.html', password_error=password_error)
         
     if len(password) > 20 or len(password) < 3:
         password_error = 'Not a valid password'.format(password)
-        return redirect("/?error=" + password_error)
+        return render_template('edit.html', password_error=password_error)
 
 # ------ verify validation ------
 
@@ -77,14 +82,14 @@ def form_validate():
 
     if verify_password != password:
         verify_password_error = 'Passwords do not match'
-        return redirect("/?error=" + verify_password_error)
+        return render_template('edit.html', verify_password_error=verify_password_error)
 
 # ------ email validation ------ 
 
 # Email is optional.
 # Email cannot have spaces.
 # Email can have only one '@' sign.
-# Email can have only '.' 
+# Email can have only one '.' 
 # Email cannot be greater than 20 characters long or less that 3 characters.
 
     email = request.form['email']
@@ -94,19 +99,19 @@ def form_validate():
     for character in email:
         if character == " ":
             email_error = "Email cannot have spaces"
-            return redirect("/?error=" + email_error)
+            return render_template('edit.html', email_error=email_error)
 
         if email.count('@') > 1:
             email_error = "Email can only contain one at sign"
-            return redirect("/?error=" + email_error)
+            return render_template('edit.html', email_error=email_error)
 
         if email.count('.') > 1:
             email_error = "Email can only contain one '.'"
-            return redirect("/?error=" + email_error)
+            return render_template('edit.html', email_error=email_error)
 
     if len(email) > 20 or len(email) < 3:
         password_error = 'Not a valid email'
-        return redirect("/?error=" + email_error)
+        return render_template('edit.html', email_error=email_error)
         
 # ------ success ------
 
