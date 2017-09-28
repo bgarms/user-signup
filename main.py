@@ -22,6 +22,8 @@ def form_validate():
     username = request.form['username']
     username_error = ''
     username_escape = cgi.escape(username, quote=True)
+    username_input = request.form['username']
+    email_input = request.form['email']
 
 # ------ Validation Section ------
 
@@ -36,13 +38,17 @@ def form_validate():
     for character in username:
         if character ==" ":
             username_error = 'Username cannot have spaces'
+            username_input = ''
             return render_template('edit.html', username_error=username_error)
 
     if username == '':
         username_error = 'Username cannot be blank'
+        username_input = ''
+        return render_template('edit.html', username_error=username_error)
         
     if len(username) > 20 or len(username) < 3:
         username_error = 'Not a valid username'
+        username_input = ''
         return render_template('edit.html', username_error=username_error)
 
 # ------ password validation ------
@@ -63,15 +69,18 @@ def form_validate():
     for character in password:
         if character == " ":
             password_error = "Password cannot have spaces"
-            return render_template('edit.html', password_error=password_error, username=username)
+            return render_template('edit.html', password_error=password_error, username_input=username_input,
+                email_input=email_input)
 
     if password == '':
         password_error = "Password cannot be blank"
-        return render_template('edit.html', password_error=password_error)
+        return render_template('edit.html', password_error=password_error, username_input=username_input,
+            email_input=email_input)
         
     if len(password) > 20 or len(password) < 3:
         password_error = 'Not a valid password'.format(password)
-        return render_template('edit.html', password_error=password_error)
+        return render_template('edit.html', password_error=password_error, username_input=username_input, 
+            email_input=email_input)
 
 # ------ verify validation ------
 
@@ -79,7 +88,8 @@ def form_validate():
 
     if verify_password != password:
         verify_password_error = 'Passwords do not match'
-        return render_template('edit.html', verify_password_error=verify_password_error)
+        return render_template('edit.html', verify_password_error=verify_password_error, 
+            username_input=username_input, email_input=email_input)
 
 # Success without email
 
@@ -101,18 +111,22 @@ def form_validate():
     for character in email:
         if character == " ":
             email_error = "Email cannot have spaces"
+            email_input = ''
             return render_template('edit.html', email_error=email_error)
 
         if email.count('@') > 1:
             email_error = "Email can only contain one at sign"
+            email_input = ''
             return render_template('edit.html', email_error=email_error)
 
         if email.count('.') > 1:
             email_error = "Email can only contain one '.'"
+            email_input = ''
             return render_template('edit.html', email_error=email_error)
 
     if len(email) > 20 or len(email) < 3:
         password_error = 'Not a valid email'
+        email_input = ''
         return render_template('edit.html', email_error=email_error)
 
 # Success with email
