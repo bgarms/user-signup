@@ -24,11 +24,14 @@ def form_validate():
     username = request.form['username']
     username_error = ''
     username_escape = cgi.escape(username, quote=True)
+
     username_input = request.form['username']
     password = request.form['password']
     password_error = ''
+
     verify_password = request.form['verify-password']
     verify_password_error = ''
+
     password_escape = cgi.escape(password, quote=True)
     email_input = request.form['email']
     email = request.form['email']
@@ -130,6 +133,16 @@ def form_validate():
     
 #---------------------------------------------------------------------------------------------------------
 
+    if verify_password_error != '' and email_error != '':
+        return render_template('edit.html', username_input=username_input, verify_password_error=verify_password_error, 
+            email_error=email_error)
+
+    if verify_password_error != '':
+        return render_template('edit.html', username_input=username_input, verify_password_error=verify_password_error, 
+            email_input=email_input) 
+
+#----------------------------------------------------------------------------------------------------------
+
     if email_error != '':
         return render_template('edit.html', username_input=username_input, email_error=email_error)
 
@@ -140,7 +153,6 @@ def form_validate():
 
 
 
-# Success with email
     
 
 app.run()
