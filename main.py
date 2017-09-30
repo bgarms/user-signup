@@ -99,6 +99,10 @@ def form_validate():
         return render_template('edit.html', username_error=username_error,
             verify_password_error=verify_password_error, email_error=email_error)
 
+    if username_error != '' and verify_password_error != '':
+        return render_template('edit.html', username_error=username_error,
+            verify_password_error=verify_password_error, email_input=email_input)
+
     if username_error != '' and password_error != '' and verify_password_error != '':
         return render_template('edit.html', username_error=username_error, password_error=password_error, 
             verify_password_error=verify_password_error, email_input=email_input)
